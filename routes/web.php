@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/demo', function () {
-    return view('welcome');
-});
+// Route::get('/demo', function () {
+//     return view('welcome');
+// });
 Route::group(['middleware' => 'guest'], function() {
   Route::get('/', 'UserController@signin')->name('user.signin');
   Route::post('/user/login', 'UserController@login')->name('user.login');
@@ -22,4 +22,8 @@ Route::group(['middleware' => 'guest'], function() {
 Route::group(['middleware' => 'auth'], function() {
   Route::get('/micropost/index', 'MicropostController@index')->name('micropost.index');
   Route::post('/user/logout', 'UserController@logout')->name('user.logout');
- });
+});
+
+// これは消す
+Route::get('/user/demo', 'UserController@demo')->name('user.demo');
+Route::post('/user/demo', 'UserController@demo')->name('user.demo');
