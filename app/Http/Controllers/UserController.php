@@ -5,70 +5,75 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests\UserRequest;
+use App\User;
+use Hash;
 use Log; # これは消す
+use Arr;
 
 class UserController extends Controller
 {
   const ITEMS = [
-    [
-      'name'  => '項目1',
-      'val'   => 'テーブルA.項目1',
-      'type'  => '1',
-    ],
-    [
-      'name'  => '項目2',
-      'val'   => 'テーブルA.項目2',
-      'type'  => '1',
-    ],
-    [
-      'name'  => '項目3',
-      'val'   => 'テーブルA.項目3',
-      'type'  => '1',
-    ],
-    [
-      'name'  => '項目4',
-      'val'   => 'テーブルA.項目4',
-      'type'  => '2',
-    ],
-    [
-      'name'  => '項目5',
-      'val'   => 'テーブルA.項目5',
-      'type'  => '2',
-    ],
-    [
-      'name'  => '項目6',
-      'val'   => 'テーブルB.項目6',
-      'type'  => '3',
-    ],
-    [
-      'name'  => '項目7',
-      'val'   => 'テーブルB.項目7',
-      'type'  => '4',
-    ],
-    [
-      'name'  => '項目8',
-      'val'   => 'テーブルB.項目8',
-      'type'  => '5',
-    ],
-    [
-      'name'  => '項目9',
-      'val'   => 'テーブルB.項目9',
-      'type'  => '6',
-    ],
-    [
-      'name'  => '項目10',
-      'val'   => 'テーブルB.項目10',
-      'type'  => '7',
-    ],
-    [
-      'name'  => '項目11',
-      'val'   => 'テーブルC.項目11',
-      'type'  => '8',
-    ],
-    [
-      'name'  => '項目12',
-      'val'   => 'テーブルC.項目12',
-      'type'  => '9',
+    'required_columns' => [
+      [
+        'name'  => '項目1',
+        'val'   => 'テーブルA.項目1',
+        'type'  => '1',
+      ],
+      [
+        'name'  => '項目2',
+        'val'   => 'テーブルA.項目2',
+        'type'  => '1',
+      ],
+      [
+        'name'  => '項目3',
+        'val'   => 'テーブルA.項目3',
+        'type'  => '1',
+      ],
+      [
+        'name'  => '項目4',
+        'val'   => 'テーブルA.項目4',
+        'type'  => '2',
+      ],
+      [
+        'name'  => '項目5',
+        'val'   => 'テーブルA.項目5',
+        'type'  => '2',
+      ],
+      [
+        'name'  => '項目6',
+        'val'   => 'テーブルB.項目6',
+        'type'  => '3',
+      ],
+      [
+        'name'  => '項目7',
+        'val'   => 'テーブルB.項目7',
+        'type'  => '4',
+      ],
+      [
+        'name'  => '項目8',
+        'val'   => 'テーブルB.項目8',
+        'type'  => '5',
+      ],
+      [
+        'name'  => '項目9',
+        'val'   => 'テーブルB.項目9',
+        'type'  => '6',
+      ],
+      [
+        'name'  => '項目10',
+        'val'   => 'テーブルB.項目10',
+        'type'  => '7',
+      ],
+      [
+        'name'  => '項目11',
+        'val'   => 'テーブルC.項目11',
+        'type'  => '8',
+      ],
+      [
+        'name'  => '項目12',
+        'val'   => 'テーブルC.項目12',
+        'type'  => '9',
+      ],
     ],
   ];
 
@@ -104,29 +109,57 @@ class UserController extends Controller
     return redirect()->route('user.signin');
   }
 
+  /**
+   * ユーザ登録ページ表示アクション
+   */
+  public function create()
+  {
+    return view('user.create');
+  }
+
+  /**
+   * ユーザ登録処理アクション
+   */
+  public function store(UserRequest $request)
+  {
+    $user     = new User;
+    $name     = $request->input('name');
+    $email    = $request->input('email');
+    $password = $request->input('password');
+    $params   = [
+      'name'      => $name,
+      'email'     => $email,
+      'password'  => Hash::make($password),
+    ];
+    if (!$user->userSave($params)) {
+      return redirect()->route('user.create')->with('error_message', 'User registration failed');
+    }
+    if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+      return redirect()->route('user.signin')->with('error_message', 'I failed to login');
+    }
+    return redirect()->route('micropost.index');
+  }
+
 
   public function demo(Request $request)
   {
     $viewParams = [];
     if ($request->isMethod('post')) {
       $checkList = $request->input('check_list');
-      Log::debug($checkList);
-      exit;
-      // if ($radioType == '1') {
-      //   $viewParams = [
-      //     'required_columns' => self::INSERT_COLUMNS,
-      //   ];
-      // } elseif ($radioType == '2') {
-      //   $viewParams = [
-      //     'required_columns' => self::UPDATE_COLUMNS,
-      //   ];
-      // } else {
-      //   $viewParams = [
-      //     'required_columns' => self::DELETE_COLUMNS,
-      //   ];
-      // }
+      // Log::debug($checkList);
+      foreach ($checkList as $type) {
+        foreach (self::ITEMS as $key => $val) {
+          // if ($type != $val['type']) {
+          //   continue;
+          // }
+          // array_push($viewParams, $val);
+            // $viewParams[] = $val;
+        }
+          // array_push($viewParams, self::ITEMS[$type]);
+      }
       // Log::debug($viewParams);
-      // return view('_demo', $viewParams);
+      // Log::debug($params);
+      return view('_demo', $viewParams);
     }
     $viewParams = [
       'required_columns' => [
@@ -137,7 +170,7 @@ class UserController extends Controller
         ],
       ]
     ];
-    // dd($viewParams);
+    // dd(self::ITEMS);
     return view('welcome', $viewParams);
   }
 }

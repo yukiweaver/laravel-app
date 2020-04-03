@@ -47,4 +47,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+    * ユーザ登録/更新
+    */
+   public function userSave($params)
+   {
+     $isRegist = $this->fill($params)->save();
+     return $isRegist;
+   }
 }
