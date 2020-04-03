@@ -17,6 +17,9 @@
          </div>
          @endif
          <div class="caption">帳簿フォーマット登録　-　入力画面</div>
+         {{-- <ul>
+            <li>ラジオボタンを選択することでINSERT,UPDATE,DELETEの必須項目を一括で追加できます。
+         </ul> --}}
           <form name="report_form" id="report_form" action="$base_url$/report/outputFormatReportRegConfirm" method="POST">
             <div class="form-box">
               <table class="data-list table">
@@ -27,25 +30,76 @@
               </table>
               <table class="data-list table">
                 <tr>
-                  <th class="t-top">INSERT</th>
-                  <th class="t-top">UPDATE</th>
-                  <th class="t-top">DELETE</th>
+                  <th class="t-top">共通</th>
+                  <th>INSERT</th>
+                  <th>UPDATE</th>
+                  <th>DELETE</th>
                 </tr>
                 <tr>
+                  <td class="t-top"></td>
                   <td class="t-top">
                     <input id="insert" type="hidden" name="insert" value="">
-                    <input class="form-control" id="radio_insert" type="radio" name="radio" value="1">
+                    <input class="form-control" id="check_insert" type="checkbox" name="check" value="1">
                   </td>
                   <td class="t-top">
                     <input id="update" type="hidden" name="update" value="">
-                    <input class="form-control" id="radio_update" type="radio" name="radio" value="2">
+                    <input class="form-control" id="check_update" type="checkbox" name="check" value="2">
                   </td>
                   <td class="t-top">
                     <input id="delete" type="hidden" name="delete" value="">
-                    <input class="form-control" id="radio_delete" type="radio" name="radio" value="3">
+                    <input class="form-control" id="check_delete" type="checkbox" name="check" value="3">
                   </td>
                 </tr>
               </table>
+              <table class="data-list table">
+                <tr>よく使う項目</tr>
+                <tr>
+                  <th class="t-top">モールA</td>
+                  <th>AA</td>
+                  <th>BB</td>
+                  <th>CC</td>
+                </tr>
+                <tr>
+                  <td class="t-top"></td>
+                  <td class="t-top">
+                    <input id="insert" type="hidden" name="insert" value="">
+                    <input class="form-control" id="aa" type="checkbox" name="check" value="4">
+                  </td>
+                  <td class="t-top">
+                    <input id="update" type="hidden" name="update" value="">
+                    <input class="form-control" id="bb" type="checkbox" name="check" value="5">
+                  </td>
+                  <td class="t-top">
+                    <input id="delete" type="hidden" name="delete" value="">
+                    <input class="form-control" id="cc" type="checkbox" name="check" value="6">
+                  </td>
+                </tr>
+                <tr>
+                  <th class="t-top">モールB</td>
+                  <th>DD</td>
+                  <th>EE</td>
+                  <th>FF</td>
+                </tr>
+                <tr>
+                  <td class="t-top"></td>
+                  <td class="t-top">
+                    <input id="insert" type="hidden" name="insert" value="">
+                    <input class="form-control" id="dd" type="checkbox" name="check" value="7">
+                  </td>
+                  <td class="t-top">
+                    <input id="update" type="hidden" name="update" value="">
+                    <input class="form-control" id="ee" type="checkbox" name="check" value="8">
+                  </td>
+                  <td class="t-top">
+                    <input id="delete" type="hidden" name="delete" value="">
+                    <input class="form-control" id="ff" type="checkbox" name="check" value="9">
+                  </td>
+                </tr>
+              </table>
+              <div class="text-center">
+                <button class="btn btn-primary" id="add_btn">追加する</button>
+              </div>
+              <br>
               <table class="data-list table">
                 <thead>
                   <tr>
@@ -76,7 +130,7 @@
                 </tbody>
               </table>
               <div class="button">
-                <input name="_submit" class="btn btn-primary" type="submit" value="　確　認　" onClick="return transfer() && chkArgs(argInfos['outputFormatReportRegConfirm'], report_form);">
+                <input name="_submit" class="btn btn-primary" type="submit" value="　確　認　" onClick="alert('デモ用です。登録はできません。');return false;">
               </div>
             </div>
           <input type="hidden" name="col_arr_count" value="1:">
@@ -89,7 +143,7 @@
 </div>
 <script>
   function renumber() {
-    var i = 0;
+    var i = 1;
     $(".no").each(function() {
       $(this).html(i++);
     });
@@ -136,18 +190,24 @@
   });
 
   $(function() {
-    $('input[name="radio"]').change(function() {
+    $('#add_btn').click(function(event) {
+      event.preventDefault();
+      var checkList = $('input[name=check]:checked').map(function() {
+        return $(this).val();
+      }).get();
+
       $.ajax({
         url: "{{route('user.demo')}}",
         type: 'POST',
         dataType: 'html',
         data: {
-          radioType: $(this).val(),
+          check_list: checkList,
           _token: "{{ csrf_token() }}"
         }
       })
       .done(function(data) {
         $('#cols-tbody').html(data);
+        renumber();
         console.log('success');
       })
       .fail(function(data) {
