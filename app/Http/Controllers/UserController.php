@@ -13,67 +13,65 @@ use Arr;
 class UserController extends Controller
 {
   const ITEMS = [
-    'required_columns' => [
-      [
-        'name'  => '項目1',
-        'val'   => 'テーブルA.項目1',
-        'type'  => '1',
-      ],
-      [
-        'name'  => '項目2',
-        'val'   => 'テーブルA.項目2',
-        'type'  => '1',
-      ],
-      [
-        'name'  => '項目3',
-        'val'   => 'テーブルA.項目3',
-        'type'  => '1',
-      ],
-      [
-        'name'  => '項目4',
-        'val'   => 'テーブルA.項目4',
-        'type'  => '2',
-      ],
-      [
-        'name'  => '項目5',
-        'val'   => 'テーブルA.項目5',
-        'type'  => '2',
-      ],
-      [
-        'name'  => '項目6',
-        'val'   => 'テーブルB.項目6',
-        'type'  => '3',
-      ],
-      [
-        'name'  => '項目7',
-        'val'   => 'テーブルB.項目7',
-        'type'  => '4',
-      ],
-      [
-        'name'  => '項目8',
-        'val'   => 'テーブルB.項目8',
-        'type'  => '5',
-      ],
-      [
-        'name'  => '項目9',
-        'val'   => 'テーブルB.項目9',
-        'type'  => '6',
-      ],
-      [
-        'name'  => '項目10',
-        'val'   => 'テーブルB.項目10',
-        'type'  => '7',
-      ],
-      [
-        'name'  => '項目11',
-        'val'   => 'テーブルC.項目11',
-        'type'  => '8',
-      ],
-      [
-        'name'  => '項目12',
-        'val'   => 'テーブルC.項目12',
-        'type'  => '9',
-      ],
+    [
+      'name'  => '項目1',
+      'val'   => 'テーブルA.項目1',
+      'type'  => '1',
+    ],
+    [
+      'name'  => '項目2',
+      'val'   => 'テーブルA.項目2',
+      'type'  => '1',
+    ],
+    [
+      'name'  => '項目3',
+      'val'   => 'テーブルA.項目3',
+      'type'  => '1',
+    ],
+    [
+      'name'  => '項目4',
+      'val'   => 'テーブルA.項目4',
+      'type'  => '2',
+    ],
+    [
+      'name'  => '項目5',
+      'val'   => 'テーブルA.項目5',
+      'type'  => '2',
+    ],
+    [
+      'name'  => '項目6',
+      'val'   => 'テーブルB.項目6',
+      'type'  => '3',
+    ],
+    [
+      'name'  => '項目7',
+      'val'   => 'テーブルB.項目7',
+      'type'  => '4',
+    ],
+    [
+      'name'  => '項目8',
+      'val'   => 'テーブルB.項目8',
+      'type'  => '5',
+    ],
+    [
+      'name'  => '項目9',
+      'val'   => 'テーブルB.項目9',
+      'type'  => '6',
+    ],
+    [
+      'name'  => '項目10',
+      'val'   => 'テーブルB.項目10',
+      'type'  => '7',
+    ],
+    [
+      'name'  => '項目11',
+      'val'   => 'テーブルC.項目11',
+      'type'  => '8',
+    ],
+    [
+      'name'  => '項目12',
+      'val'   => 'テーブルC.項目12',
+      'type'  => '9',
     ],
   ];
 
@@ -208,19 +206,20 @@ class UserController extends Controller
     $viewParams = [];
     if ($request->isMethod('post')) {
       $checkList = $request->input('check_list');
-      // Log::debug($checkList);
+      $items = [];
       foreach ($checkList as $type) {
-        foreach (self::ITEMS as $key => $val) {
-          // if ($type != $val['type']) {
-          //   continue;
-          // }
-          // array_push($viewParams, $val);
-            // $viewParams[] = $val;
+        foreach (self::ITEMS as $val) {
+          if ($type != $val['type']) {
+            continue;
+          }
+          array_push($items, $val);
         }
-          // array_push($viewParams, self::ITEMS[$type]);
       }
-      // Log::debug($viewParams);
-      // Log::debug($params);
+      Log::debug($items);
+      $viewParams = [
+        'required_columns' => $items,
+      ];
+      Log::debug($viewParams);
       return view('_demo', $viewParams);
     }
     $viewParams = [
@@ -232,7 +231,6 @@ class UserController extends Controller
         ],
       ]
     ];
-    // dd(self::ITEMS);
     return view('welcome', $viewParams);
   }
 

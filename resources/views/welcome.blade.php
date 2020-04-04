@@ -208,6 +208,8 @@
       .done(function(data) {
         $('#cols-tbody').html(data);
         renumber();
+        var checks = $('input[name=check]:checked');
+        checks.prop('checked', false).change();
         console.log('success');
       })
       .fail(function(data) {
