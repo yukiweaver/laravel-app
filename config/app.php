@@ -225,6 +225,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        // 定数系
+        'UserConst' =>  App\Consts\UserConst::class,
 
     ],
 
