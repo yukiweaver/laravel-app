@@ -10,10 +10,12 @@ class UserConst
       'name'  => '項目1',
       'val'   => 'テーブルA.項目1',
       'type'  => '1',
-      'column' => 'tableA.name',
+      // 'column' => 'tableA.name',
+      'sql' => '(select 項目1 from テーブルA where ....)',
+      // 'mall' => 'plala',
       'required' => [
-        'insert',
-        'update',
+        'is_insert' => true,
+        'is_update' => true,
       ],
     ],
     [

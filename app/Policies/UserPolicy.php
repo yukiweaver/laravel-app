@@ -17,9 +17,9 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function view(User $user)
+    public function view(User $model, User $user)
     {
-        return Auth::id() == $user->id;
+        return $model->id == $user->id;
     }
 
     /**
@@ -29,8 +29,8 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function update(User $user)
+    public function update(User $model, User $user)
     {
-      return Auth::id() == $user->id;
+      return $model->id == $user->id;
     }
 }
